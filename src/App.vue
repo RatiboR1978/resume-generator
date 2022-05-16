@@ -3,9 +3,11 @@
     <form class="card card-w30">
       <div class="form-control">
         <label for="type">Тип блока</label>
-        <app-select @selected-block="selected"></app-select>
+        <app-select
+          @selected-block="selected"
+          :value="activeOption"
+        ></app-select>
       </div>
-
       <div class="form-control">
         <label for="value">Значение</label>
         <textarea id="value" rows="3" v-model="textOptions"></textarea>
@@ -19,30 +21,20 @@
       <h3 v-if="blocks.length === 0">
         Добавьте первый блок, чтобы увидеть результат
       </h3>
-      <div v-for="component in blocks" :key="component">
-        <component :is="component" :value="textComponent"></component>
+      <div v-for="item in blocks" :key="item">
+        <component :is="item.type" :value="item.text"></component>
       </div>
     </div>
   </div>
   <div class="container">
     <p>
-      <app-button>Загрузить кооментарии</app-button>
+      <app-button @click="donloadComents">Загрузить кооментарии</app-button>
     </p>
+    <app-loader v-if="loading"></app-loader>
     <div class="card" v-if="coments.length > 0">
       <h2>Комментарии</h2>
-      <ul class="list">
-        <li class="list-item">
-          <div>
-            <p><strong>test@microsoft.com</strong></p>
-            <small
-              >Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Eligendi, reiciendis.</small
-            >
-          </div>
-        </li>
-      </ul>
+      <app-coments :comments="coments"></app-coments>
     </div>
-    <div class="loader"></div>
   </div>
 </template>
 
@@ -53,6 +45,8 @@ import AppAvatar from './components/AppAvatar.vue'
 import AppSubTitle from './components/AppSubTitle.vue'
 import AppText from './components/AppText.vue'
 import AppButton from './components/AppButton.vue'
+import AppLoader from './components/AppLoader.vue'
+import AppComents from './components/AppComents.vue'
 export default {
   data () {
     return {
@@ -60,7 +54,7 @@ export default {
       coments: [],
       textOptions: '',
       activeOption: 'app-title',
-      textComponent: ''
+      loading: false
     }
   },
   components: {
@@ -69,16 +63,76 @@ export default {
     AppAvatar,
     AppSubTitle,
     AppText,
-    AppButton
+    AppButton,
+    AppLoader,
+    AppComents
   },
   methods: {
     selected (data) {
       this.activeOption = data
     },
     addBlock () {
-      this.textComponent = this.textOptions
-      this.blocks.push(this.activeOption)
+      this.blocks.push({
+        type: this.activeOption,
+        text: this.textOptions
+      })
+      this.textOptions = ''
+      this.activeOption = 'app-title'
+      this.createComponent()
+    },
+    async donloadComents () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://jsonplaceholder.typicode.com/comments?_limit=42'
+        )
+        const arrComments = await response.json()
+        this.coments.push(...arrComments)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
+    },
+    async createComponent () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://vue-with-http-25010-default-rtdb.asia-southeast1.firebasedatabase.app/components.json',
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              components: this.blocks
+            })
+          }
+        )
+        console.log(response)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
+    },
+    async donloadComponent () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://vue-with-http-25010-default-rtdb.asia-southeast1.firebasedatabase.app/components.json'
+        )
+        const arrComponents = await response.json()
+        this.blocks.push(...arrComponents.components)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
     }
+  },
+  mounted () {
+    this.donloadComponent()
   }
 }
 </script>
@@ -88,7 +142,6 @@ export default {
   display: flex;
   justify-content: center;
 }
-
 .avatar img {
   width: 150px;
   height: auto;

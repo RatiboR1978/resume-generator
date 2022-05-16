@@ -1,5 +1,5 @@
 <template>
-  <button class="btn primary"><slot /></button>
+  <div class="loader"></div>
 </template>
 
 <script>

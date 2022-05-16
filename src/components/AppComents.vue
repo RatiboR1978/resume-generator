@@ -1,18 +1,25 @@
-<!--<template>
+<template>
   <ul class="list">
-    <li class="list-item" v-for="coment in comentsArr">
+    <li class="list-item" v-for="item in comments" :key="item.id">
       <div>
         <p>
-          <strong>{{ coment.email }}</strong>
+          <strong>{{ item.email }}</strong>
         </p>
-        <small>{{ coment.text }}</small>
+        <small>{{ item.body }}</small>
       </div>
     </li>
   </ul>
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    comments: {
+      type: Array,
+      required: true
+    }
+  }
+}
 </script>
 
-<style></style>-->
+<style></style>

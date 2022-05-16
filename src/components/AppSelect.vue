@@ -1,6 +1,8 @@
 <template>
-  <select id="type" @change="selected($event)">
-    <option :value="item.value" v-for="(item, idx) in valueSelect" :key="idx" >{{item.text}}</option>
+  <select id="type" @change="selected($event)" :value="activeOption">
+    <option :value="item.value" v-for="(item, idx) in valueSelect" :key="idx">
+      {{ item.text }}
+    </option>
   </select>
 </template>
 
@@ -8,7 +10,13 @@
 export default {
   data () {
     return {
-      acyiveOption: this.key,
+      props: {
+        value: {
+          type: String,
+          required: true
+        }
+      },
+      activeOption: this.value,
       valueSelect: [
         {
           value: 'app-title',
