@@ -16,6 +16,7 @@ export default {
   name: 'AppComponentContainer',
   props: ['blocks'],
   data () {
+    console.log(this.blocks)
     return {
 
     }
