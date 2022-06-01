@@ -1,26 +1,53 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container column">
+    <app-form @add-block="addBlockData"></app-form>
+    <app-component-container :bloks="this.blocks"></app-component-container>
+  </div>
+  <div class="container">
+    <p>
+      <app-button>Загрузить комментарии</app-button>
+    </p>
+    <app-comments></app-comments>
+    <app-loader></app-loader>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AppForm from '@/components/AppForm'
+import AppButton from '@/components/AppButton'
+import AppComments from '@/components/AppComments'
+import AppLoader from '@/components/AppLoader'
+import AppComponentContainer from '@/components/AppComponentContainer'
 
 export default {
-  name: 'App',
+  data () {
+    return {
+      nameActiveBlock: '',
+      dataActiveBlock: '',
+      blocks: []
+    }
+  },
   components: {
-    HelloWorld
+    AppForm,
+    AppButton,
+    AppComments,
+    AppLoader,
+    AppComponentContainer
+  },
+  methods: {
+    addBlockData (name, text) {
+      this.nameActiveBlock = name
+      this.dataActiveBlock = text
+      this.blocks.push({
+        type: this.nameActiveBlock,
+        text: this.dataActiveBlock
+      })
+      console.log(this.blocks)
+    }
   }
 }
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+
 </style>
