@@ -1,6 +1,6 @@
 <template>
   <div class="card card-w70">
-    <h3 v-if="this.blocks === undefined">Добавьте первый блок, чтобы увидеть результат</h3>
+    <h3 v-if="this.blocks.length === 0">Добавьте первый блок, чтобы увидеть результат</h3>
     <div v-for="(item, idx) in blocks" :key="idx">
       <component :is="item.type" :value="item.text"></component>
     </div>

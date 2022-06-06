@@ -1,7 +1,7 @@
 <template>
   <div class="form-control">
     <label for="type">Тип блока</label>
-    <select id="type" @change="selected($event)">
+    <select id="type" @change="selected($event)" :value="this.value">
       <option :value="item.value" v-for="(item, idx) in arrOptions" :key="idx">{{ item.text }}</option>
     </select>
   </div>

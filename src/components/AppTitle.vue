@@ -1,9 +1,15 @@
 <template>
-  <h1>Резюме Nickname</h1>
+  <h1>{{this.value}}</h1>
 </template>
 
 <script>
 export default {
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  },
   name: 'AppTitle'
 }
 </script>

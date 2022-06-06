@@ -1,7 +1,7 @@
 <template>
   <div class="container column">
     <app-form @add-block="addBlockData"></app-form>
-    <app-component-container :bloks="this.blocks"></app-component-container>
+    <app-component-container :blocks="this.blocks"></app-component-container>
   </div>
   <div class="container">
     <p>
