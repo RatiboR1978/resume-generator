@@ -1,7 +1,12 @@
 <template>
   <div class="form-control">
     <label for="value">Значение</label>
-    <textarea id="value" rows="3" @input="inputTextarea()" v-model="this.textOptions"></textarea>
+    <textarea
+      id="value"
+      rows="3"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+    ></textarea>
   </div>
 </template>
 
@@ -9,24 +14,12 @@
 export default {
   name: 'AppTextArea',
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
-    }
-  },
-  data () {
-    return {
-      textOptions: this.value
-    }
-  },
-  methods: {
-    inputTextarea () {
-      this.$emit('input-text', this.textOptions)
     }
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,7 +1,7 @@
 <template>
   <form class="card card-w30">
     <app-select @selected-block="selected" :value="activeOption"></app-select>
-    <app-text-area @input-text="inputTextAria" :value="this.textAria"></app-text-area>
+    <app-text-area v-model="textAria"></app-text-area>
     <app-button :disabled="textAria.length < 4"  @click.prevent="addBlock">Добавить</app-button>
   </form>
 </template>
@@ -27,10 +27,6 @@ export default {
   methods: {
     selected (data) {
       this.activeOption = data
-    },
-    inputTextAria (data) {
-      console.log(data)
-      this.textAria = data
     },
     addBlock () {
       this.$emit('add-block', this.activeOption, this.textAria)
