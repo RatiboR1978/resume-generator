@@ -1,7 +1,11 @@
 <template>
   <div class="form-control">
     <label for="type">Тип блока</label>
-    <select id="type" @change="selected($event)" :value="this.value">
+    <select
+      id="type"
+      @change="$emit('update:modelValue', $event.target.value)"
+      :value="modelValue"
+    >
       <option :value="item.value" v-for="(item, idx) in arrOptions" :key="idx">{{ item.text }}</option>
     </select>
   </div>
@@ -11,14 +15,13 @@
 export default {
   name: 'AppSelect',
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: true
     }
   },
   data () {
     return {
-      activeOption: this.value,
       arrOptions: [
         {
           value: 'app-title',
@@ -37,11 +40,6 @@ export default {
           text: 'Текст'
         }
       ]
-    }
-  },
-  methods: {
-    selected (event) {
-      this.$emit('selected-block', event.target.value)
     }
   }
 }

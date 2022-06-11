@@ -5,10 +5,10 @@
   </div>
   <div class="container">
     <p>
-      <app-button>Загрузить комментарии</app-button>
+      <app-button @click="donloadComents">Загрузить комментарии</app-button>
     </p>
-    <app-comments></app-comments>
-    <app-loader></app-loader>
+    <app-comments :comments="this.comments"></app-comments>
+    <app-loader v-if="loading"></app-loader>
   </div>
 </template>
 
@@ -24,7 +24,9 @@ export default {
     return {
       nameActiveBlock: '',
       dataActiveBlock: '',
-      blocks: []
+      blocks: [],
+      comments: [],
+      loading: false
     }
   },
   components: {
@@ -42,8 +44,62 @@ export default {
         type: this.nameActiveBlock,
         text: this.dataActiveBlock
       })
-      console.log(this.blocks)
+      this.createComponent()
+    },
+    async donloadComents () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://jsonplaceholder.typicode.com/comments?_limit=42'
+        )
+        const arrComments = await response.json()
+        this.comments.push(...arrComments)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
+    },
+    async createComponent () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://vue-resume-generator-2-default-rtdb.firebaseio.com/components.json',
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              components: this.blocks
+            })
+          }
+        )
+        console.log(response)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
+    },
+    async donloadComponent () {
+      try {
+        this.loading = true
+        const response = await fetch(
+          'https://vue-resume-generator-2-default-rtdb.firebaseio.com/components.json'
+        )
+        const arrComponents = await response.json()
+        console.log(arrComponents)
+        this.blocks.push(...arrComponents.components)
+        this.loading = false
+      } catch (error) {
+        console.log(error)
+        this.loading = false
+      }
     }
+  },
+  mounted () {
+    this.donloadComponent()
   }
 }
 </script>
